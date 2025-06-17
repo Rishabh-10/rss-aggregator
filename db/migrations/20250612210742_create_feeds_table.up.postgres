@@ -1,0 +1,5 @@
+create table feeds (
+    id uuid primary key,
+    data text not null,
+    feeder_id uuid not null references feeders (id) on delete cascade
+);

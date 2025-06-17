@@ -1,0 +1,5 @@
+create table if not exists feeders (
+    id uuid primary key,
+    name text not null,
+    link text not null
+);
