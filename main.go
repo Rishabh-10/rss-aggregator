@@ -7,6 +7,7 @@ import (
 	"os"
 
 	db "github.com/Rishabh-10/rss-agg/db/store"
+	feedfetcher "github.com/Rishabh-10/rss-agg/feed-fetcher"
 	"github.com/Rishabh-10/rss-agg/handlers/feeders"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -64,6 +65,10 @@ func main() {
 		w.Write([]byte("OK"))
 	})
 
+	// rss aggregator
+	go feedfetcher.GetFeeds(*queries)
+
+	// initializing server
 	server := &http.Server{
 		Addr:    ":" + os.Getenv("HTTP_PORT"),
 		Handler: router}
