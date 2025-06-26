@@ -1,25 +1,29 @@
 package models
 
 import (
-	"github.com/google/uuid"
-
 	db "github.com/Rishabh-10/rss-agg/db/store"
+	"github.com/google/uuid"
 )
 
-type Feed struct {
-	Channel Channel `json:"channel" xml:"channel"`
+type RSSFeeds struct {
+	Channel struct {
+		Title       string     `json:"title" xml:"title"`
+		Description string     `json:"description" xml:"description"`
+		Link        string     `json:"link" xml:"link"`
+		Items       []FeedItem `json:"items" xml:"item"`
+	} `json:"channel" xml:"channel"`
 }
 
-type Channel struct {
+type FeedItem struct {
 	ID          uuid.UUID `json:"id"`
 	Title       string    `json:"title" xml:"title"`
 	Description string    `json:"description" xml:"description"`
 }
 
-func (f *Feed) ToStoreModel() db.CreateFeedParams {
+func (f *FeedItem) ToStoreModel() db.CreateFeedParams {
 	return db.CreateFeedParams{
-		ID:          f.Channel.ID,
-		Title:       f.Channel.Title,
-		Description: f.Channel.Description,
+		ID:          f.ID,
+		Title:       f.Title,
+		Description: f.Description,
 	}
 }

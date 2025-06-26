@@ -52,18 +52,22 @@ func GetFeeds(db db.Queries) {
 				continue
 			}
 
-			var feed models.Feed
+			var feeds models.RSSFeeds
 
-			_ = xml.Unmarshal(data, &feed)
+			_ = xml.Unmarshal(data, &feeds)
 
-			feed.Channel.ID = uuid.New()
+			slog.Info("Feed fetched successfully:" + fmt.Sprintf("%v", feeds))
 
-			slog.Info("Feed fetched successfully:" + fmt.Sprintf("%v", feed))
+			for _, feed := range feeds.Channel.Items {
+				feed.ID = uuid.New()
 
-			_, err = db.CreateFeed(ctx, feed.ToStoreModel())
-			if err != nil {
-				slog.Error("failed to create feed in database", "feeder", feeder.Name, "error", err)
-				continue
+				_, err := db.CreateFeed(ctx, feed.ToStoreModel())
+				if err != nil {
+					slog.Error("failed to insert feed into database", "error", err, "feed_title", feed.Title)
+					continue
+				}
+
+				slog.Info("Feed inserted successfully", "title", feed)
 			}
 		}
 	}
