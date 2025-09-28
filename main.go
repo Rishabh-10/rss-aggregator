@@ -73,10 +73,14 @@ func main() {
 		w.Write([]byte("OK"))
 	})
 
-	// rss aggregator
+	// rss feed fetcher
+	workerPoolSize, _ := strconv.Atoi(os.Getenv("WORKER_POOL_SIZE"))
+
+	rssFeedFetcher := feedfetcher.New(*queries, workerPoolSize)
+
 	rssAggEnabled, _ := strconv.ParseBool(os.Getenv("RSS_AGG_ENABLED"))
 	if rssAggEnabled {
-		go feedfetcher.GetFeeds(*queries)
+		go rssFeedFetcher.GetFeeds()
 	} else {
 		log.Println("RSS Aggregator disabled. Set RSS_AGG_ENABLED=true to enable it.")
 	}
