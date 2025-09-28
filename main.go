@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	db "github.com/Rishabh-10/rss-agg/db/store"
 	feedfetcher "github.com/Rishabh-10/rss-agg/feed-fetcher"
@@ -65,13 +66,20 @@ func main() {
 
 	router.Post("/feeders", feedersHandler.Create)
 
+	router.Get("/feeder/{id}/feeds", feedersHandler.GetFeeds)
+
 	router.Get("/health-check", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("OK"))
 	})
 
 	// rss aggregator
-	go feedfetcher.GetFeeds(*queries)
+	rssAggEnabled, _ := strconv.ParseBool(os.Getenv("RSS_AGG_ENABLED"))
+	if rssAggEnabled {
+		go feedfetcher.GetFeeds(*queries)
+	} else {
+		log.Println("RSS Aggregator disabled. Set RSS_AGG_ENABLED=true to enable it.")
+	}
 
 	// initializing server
 	server := &http.Server{

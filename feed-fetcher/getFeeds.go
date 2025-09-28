@@ -60,6 +60,7 @@ func GetFeeds(db db.Queries) {
 
 			for _, feed := range feeds.Channel.Items {
 				feed.ID = uuid.New()
+				feed.FeederID = feeder.ID
 
 				_, err := db.CreateFeed(ctx, feed.ToStoreModel())
 				if err != nil {

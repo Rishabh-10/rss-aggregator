@@ -16,6 +16,7 @@ type RSSFeeds struct {
 
 type FeedItem struct {
 	ID          uuid.UUID `json:"id"`
+	FeederID    uuid.UUID `json:"-"`
 	Title       string    `json:"title" xml:"title"`
 	Description string    `json:"description" xml:"description"`
 }
@@ -23,6 +24,7 @@ type FeedItem struct {
 func (f *FeedItem) ToStoreModel() db.CreateFeedParams {
 	return db.CreateFeedParams{
 		ID:          f.ID,
+		FeederID:    f.FeederID,
 		Title:       f.Title,
 		Description: f.Description,
 	}

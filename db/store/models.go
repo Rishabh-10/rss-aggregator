@@ -12,6 +12,7 @@ import (
 
 type Feed struct {
 	ID          uuid.UUID
+	FeederID    uuid.UUID
 	Title       string
 	Description string
 	CreatedAt   time.Time
