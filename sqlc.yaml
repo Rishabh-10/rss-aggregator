@@ -1,0 +1,11 @@
+version: "2"
+sql:
+  - name: postgresql
+    schema: db/queries/schema.sql
+    queries: db/queries/query.sql
+    engine: postgresql
+    gen:
+      go:
+        package: db
+        sql_package: database/sql # default value is database/sql
+        out: db/store
