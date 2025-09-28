@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"flag"
 	"log"
 	"net/http"
 	"os"
@@ -21,10 +22,14 @@ import (
 )
 
 func main() {
+	// read config path from command line
+	configPath := flag.String("config", "./configs/.env", "path to config file (yaml/json)")
+	flag.Parse()
+
 	router := chi.NewRouter()
 
 	// loading envs
-	godotenv.Load("./configs/.env")
+	godotenv.Load(*configPath)
 
 	router.Use(middleware.Logger)
 	router.Use(middleware.Recoverer)
